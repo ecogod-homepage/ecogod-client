@@ -6,15 +6,16 @@ import CompanyPage from "./pages/CompanyPage";
 import ProductsPage from "./pages/ProductsPage";
 import ProductCategoryPage from "./pages/ProductCategoryPage";
 import InquiryPage from "./pages/InquiryPage";
-import NoticeListPage from "./pages/NoticeListPage"; // Existing file
-import NoticeDetailPage from "./pages/NoticeDetailPage"; // Existing file
-import NotFoundPage from "./pages/NotFoundPage"; // Existing file
+import NoticeListPage from "./pages/NoticeListPage";
+import NoticeDetailPage from "./pages/NoticeDetailPage";
+import NotFoundPage from "./pages/NotFoundPage";
 import AdminCategoriesPage from "./pages/admin/AdminCategoriesPage";
+import AdminLoginPage from "./pages/admin/AdminLoginPage";
 import AdminProductFormPage from "./pages/admin/AdminProductFormPage";
 import AdminProductsPage from "./pages/admin/AdminProductsPage";
+import ProtectedAdminRoute from "./components/admin/ProtectedAdminRoute";
 import brandLogo from "./assets/ecogad-logo-request.png";
 
-// Simple Footer for completeness
 const Footer = () => (
   <footer className="site-footer">
     <div className="container footer-inner">
@@ -51,7 +52,15 @@ export default function App() {
       {isAdminRoute ? null : <Header />}
       <main className={isAdminRoute ? "admin-root-main" : "site-main"}>
         <Routes>
-          <Route path="/admin" element={<AdminLayout />}>
+          <Route path="/admin/login" element={<AdminLoginPage />} />
+          <Route
+            path="/admin"
+            element={
+              <ProtectedAdminRoute>
+                <AdminLayout />
+              </ProtectedAdminRoute>
+            }
+          >
             <Route index element={<Navigate to="/admin/products" replace />} />
             <Route path="products" element={<AdminProductsPage />} />
             <Route path="products/new" element={<AdminProductFormPage />} />

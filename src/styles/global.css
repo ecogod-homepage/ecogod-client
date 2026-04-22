@@ -2267,3 +2267,117 @@ h4 {
     padding-left: 16px;
   }
 }
+
+.admin-topbar-subtitle {
+  margin-top: 6px;
+  font-size: 0.95rem;
+  color: var(--color-gray-600);
+}
+
+.admin-auth-shell {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 24px;
+  background:
+    radial-gradient(circle at top, rgb(var(--color-accent-rgb) / 0.12), transparent 32%),
+    linear-gradient(180deg, #f7f6f2 0%, #efede7 100%);
+}
+
+.admin-auth-card {
+  width: min(100%, 520px);
+  padding: 40px;
+  border: 1px solid var(--color-gray-200);
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: var(--shadow-lg);
+}
+
+.admin-auth-status-card {
+  text-align: center;
+}
+
+.admin-auth-status-label,
+.admin-auth-eyebrow {
+  margin-bottom: 12px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  color: var(--color-blue-700);
+  text-transform: uppercase;
+}
+
+.admin-auth-brand h1 {
+  font-size: clamp(2rem, 4vw, 2.5rem);
+  line-height: 1.2;
+  color: var(--color-navy-900);
+}
+
+.admin-auth-brand p {
+  margin-top: 14px;
+  font-size: 1.02rem;
+  color: var(--color-gray-600);
+}
+
+.admin-auth-form {
+  margin-top: 32px;
+  display: grid;
+  gap: 18px;
+}
+
+.admin-auth-field {
+  display: grid;
+  gap: 8px;
+}
+
+.admin-auth-field span {
+  font-size: 0.98rem;
+  font-weight: 700;
+  color: var(--color-navy-900);
+}
+
+.admin-auth-field input {
+  width: 100%;
+  min-height: 56px;
+  padding: 16px 18px;
+  border: 1px solid var(--color-gray-200);
+  border-radius: 14px;
+  background: var(--color-white);
+  color: var(--color-navy-900);
+  font-size: 1rem;
+  transition: border-color var(--transition), box-shadow var(--transition);
+}
+
+.admin-auth-field input:focus {
+  outline: none;
+  border-color: var(--color-blue-700);
+  box-shadow: 0 0 0 4px rgb(var(--color-accent-rgb) / 0.18);
+}
+
+.admin-auth-error {
+  padding: 14px 16px;
+  border-radius: 14px;
+  background: rgba(186, 26, 26, 0.08);
+  color: #a11b1b;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.admin-auth-submit {
+  width: 100%;
+  min-height: 56px;
+  justify-content: center;
+  font-size: 1rem;
+}
+
+@media (max-width: 767px) {
+  .admin-auth-shell {
+    padding: 24px 16px;
+  }
+
+  .admin-auth-card {
+    padding: 28px 22px;
+    border-radius: 20px;
+  }
+}
