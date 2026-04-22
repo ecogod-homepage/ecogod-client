@@ -1,5 +1,6 @@
-import { Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import Header from "./layouts/Header";
+import AdminLayout from "./layouts/AdminLayout";
 import HomePage from "./pages/HomePage";
 import CompanyPage from "./pages/CompanyPage";
 import ProductsPage from "./pages/ProductsPage";
@@ -8,6 +9,9 @@ import InquiryPage from "./pages/InquiryPage";
 import NoticeListPage from "./pages/NoticeListPage"; // Existing file
 import NoticeDetailPage from "./pages/NoticeDetailPage"; // Existing file
 import NotFoundPage from "./pages/NotFoundPage"; // Existing file
+import AdminCategoriesPage from "./pages/admin/AdminCategoriesPage";
+import AdminProductFormPage from "./pages/admin/AdminProductFormPage";
+import AdminProductsPage from "./pages/admin/AdminProductsPage";
 import brandLogo from "./assets/ecogad-logo-request.png";
 
 // Simple Footer for completeness
@@ -39,11 +43,21 @@ const Footer = () => (
 );
 
 export default function App() {
+  const location = useLocation();
+  const isAdminRoute = location.pathname.startsWith("/admin");
+
   return (
-    <div className="site-shell">
-      <Header />
-      <main className="site-main">
+    <div className={isAdminRoute ? "admin-root-shell" : "site-shell"}>
+      {isAdminRoute ? null : <Header />}
+      <main className={isAdminRoute ? "admin-root-main" : "site-main"}>
         <Routes>
+          <Route path="/admin" element={<AdminLayout />}>
+            <Route index element={<Navigate to="/admin/products" replace />} />
+            <Route path="products" element={<AdminProductsPage />} />
+            <Route path="products/new" element={<AdminProductFormPage />} />
+            <Route path="products/:productId/edit" element={<AdminProductFormPage />} />
+            <Route path="categories" element={<AdminCategoriesPage />} />
+          </Route>
           <Route path="/" element={<HomePage />} />
           <Route path="/company" element={<CompanyPage />} />
           <Route path="/products" element={<ProductsPage />} />
@@ -54,7 +68,7 @@ export default function App() {
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </main>
-      <Footer />
+      {isAdminRoute ? null : <Footer />}
     </div>
   );
 }

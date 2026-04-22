@@ -1,9 +1,35 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import PageHero from "../components/common/PageHero";
-import { categories } from "../data/categories";
+import EmptyState from "../components/common/EmptyState";
+import { fetchPublicCategories } from "../services/api/products";
 
 const ProductsPage = () => {
+  const [categories, setCategories] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    let ignore = false;
+
+    async function loadCategories() {
+      try {
+        const items = await fetchPublicCategories();
+        if (!ignore) {
+          setCategories(items);
+        }
+      } finally {
+        if (!ignore) {
+          setIsLoading(false);
+        }
+      }
+    }
+
+    loadCategories();
+    return () => {
+      ignore = true;
+    };
+  }, []);
+
   return (
     <div className="products-page">
       <PageHero
@@ -20,23 +46,32 @@ const ProductsPage = () => {
           <p>고객사의 환경에 최적화된 다양한 필터 라인업을 확인하세요.</p>
         </div>
 
-        <div className="card-grid product-card-grid">
-          {categories.map((category) => (
-            <Link to={`/products/${category.id}`} key={category.id} className="product-category-card">
-              <div className="product-category-card-body">
-                <div>
-                  <h3 className="heading-3 product-category-title">{category.name}</h3>
-                  <p className="body-text">{category.description}</p>
-                </div>
+        {isLoading ? (
+          <div className="notice-loading">카테고리를 불러오는 중입니다...</div>
+        ) : categories.length > 0 ? (
+          <div className="card-grid product-card-grid">
+            {categories.map((category) => (
+              <Link to={`/products/${category.slug}`} key={category.id} className="product-category-card">
+                <div className="product-category-card-body">
+                  <div>
+                    <h3 className="heading-3 product-category-title">{category.name}</h3>
+                    <p className="body-text">{category.description}</p>
+                  </div>
 
-                <div className="product-category-link">
-                  View Products
-                  <span aria-hidden="true">→</span>
+                  <div className="product-category-link">
+                    View Products
+                    <span aria-hidden="true">→</span>
+                  </div>
                 </div>
-              </div>
-            </Link>
-          ))}
-        </div>
+              </Link>
+            ))}
+          </div>
+        ) : (
+          <EmptyState
+            title="표시할 카테고리가 없습니다"
+            message="관리자 페이지에서 사용 중인 카테고리를 등록하면 이곳에 표시됩니다."
+          />
+        )}
       </section>
     </div>
   );

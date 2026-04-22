@@ -2,20 +2,47 @@ import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import PageHero from "../components/common/PageHero";
 import EmptyState from "../components/common/EmptyState";
-import { categories, getCategoryById } from "../data/categories";
+import {
+  fetchCategoryBySlug,
+  fetchProductsByCategory,
+  fetchPublicCategories
+} from "../services/api/products";
 
 const ProductCategoryPage = () => {
   const { categorySlug } = useParams();
   const [category, setCategory] = useState(null);
+  const [categories, setCategories] = useState([]);
   const [products, setProducts] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const currentCategory = getCategoryById(categorySlug);
-    setCategory(currentCategory);
+    let ignore = false;
 
-    // 향후 어드민 등록 데이터 연동 시 API 조회로 교체
-    setProducts([]);
+    async function loadData() {
+      const [categoryItems, currentCategory, productItems] = await Promise.all([
+        fetchPublicCategories(),
+        fetchCategoryBySlug(categorySlug),
+        fetchProductsByCategory(categorySlug)
+      ]);
+
+      if (!ignore) {
+        setCategories(categoryItems);
+        setCategory(currentCategory);
+        setProducts(productItems);
+        setIsLoading(false);
+      }
+    }
+
+    loadData();
+
+    return () => {
+      ignore = true;
+    };
   }, [categorySlug]);
+
+  if (isLoading) {
+    return <div className="container section category-state-wrap">카테고리를 불러오는 중입니다.</div>;
+  }
 
   if (!category) {
     return (
@@ -40,11 +67,12 @@ const ProductCategoryPage = () => {
       <section className="section container">
         <div className="product-category-tabs" aria-label="제품 카테고리 탭">
           {categories.map((item) => {
-            const isActive = item.id === categorySlug;
+            const isActive = item.slug === categorySlug;
+
             return (
               <Link
                 key={item.id}
-                to={`/products/${item.id}`}
+                to={`/products/${item.slug}`}
                 className={`btn btn-outline product-category-tab ${isActive ? "active" : ""}`}
               >
                 {item.name}
@@ -54,9 +82,20 @@ const ProductCategoryPage = () => {
         </div>
 
         {products.length > 0 ? (
-          <div className="product-grid">
+          <div className="card-grid product-card-grid">
             {products.map((product) => (
-              <div key={product.id}>{product.name}</div>
+              <article key={product.id} className="product-category-card">
+                <div className="product-category-card-body product-item-card-body">
+                  <div>
+                    <h3 className="heading-3 product-category-title">{product.name}</h3>
+                    <p className="body-text">{product.summary || "요약 설명이 아직 등록되지 않았습니다."}</p>
+                  </div>
+
+                  <p className="product-item-description">
+                    {product.description || "상세 설명은 관리자 페이지에서 등록할 수 있습니다."}
+                  </p>
+                </div>
+              </article>
             ))}
           </div>
         ) : (
