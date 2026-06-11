@@ -1,0 +1,79 @@
+name: Front CD (AWS)
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: front-aws-production
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    name: Deploy to S3 and CloudFront
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      AWS_REGION: ${{ vars.AWS_REGION }}
+      S3_BUCKET_NAME: ${{ vars.AWS_S3_BUCKET_NAME }}
+      CLOUDFRONT_DISTRIBUTION_ID: ${{ vars.AWS_CLOUDFRONT_DISTRIBUTION_ID }}
+      VITE_API_BASE_URL: ${{ vars.VITE_API_BASE_URL }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Validate deployment settings
+        run: |
+          test -n "${AWS_REGION}" || (echo "AWS_REGION is required" && exit 1)
+          test -n "${S3_BUCKET_NAME}" || (echo "AWS_S3_BUCKET_NAME is required" && exit 1)
+          test -n "${CLOUDFRONT_DISTRIBUTION_ID}" || (echo "AWS_CLOUDFRONT_DISTRIBUTION_ID is required" && exit 1)
+          test -n "${VITE_API_BASE_URL}" || (echo "VITE_API_BASE_URL is required" && exit 1)
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ vars.AWS_REGION }}
+
+      - name: Upload static assets
+        run: |
+          aws s3 sync dist/ "s3://${S3_BUCKET_NAME}" \
+            --delete \
+            --exclude "*.html" \
+            --cache-control "public, max-age=31536000, immutable"
+
+      - name: Upload HTML entrypoints
+        shell: bash
+        run: |
+          while IFS= read -r file; do
+            [ -f "${file}" ] || continue
+
+            target_key="${file#dist/}"
+            aws s3 cp "${file}" "s3://${S3_BUCKET_NAME}/${target_key}" \
+              --content-type "text/html; charset=utf-8" \
+              --cache-control "no-cache, no-store, must-revalidate"
+          done < <(find dist -type f -name '*.html' | sort)
+
+      - name: Invalidate CloudFront cache
+        run: |
+          aws cloudfront create-invalidation \
+            --distribution-id "${CLOUDFRONT_DISTRIBUTION_ID}" \
+            --paths "/*"
