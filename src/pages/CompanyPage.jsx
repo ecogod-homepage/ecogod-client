@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import PageHero from "../components/common/PageHero";
 import SectionHeader from "../components/common/SectionHeader";
-import brandFullLogo from "../assets/ecogad-logo-request.png";
+import brandFullLogo from "../assets/ecogod-logo-request.png";
 
 const histories = [
   {

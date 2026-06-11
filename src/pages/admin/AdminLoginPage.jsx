@@ -64,7 +64,7 @@ export default function AdminLoginPage() {
     <section className="admin-auth-shell">
       <div className="admin-auth-card">
         <div className="admin-auth-brand">
-          <p className="admin-auth-eyebrow">ECOGAD ADMIN</p>
+          <p className="admin-auth-eyebrow">ECOGOD ADMIN</p>
           <h1>관리자 로그인</h1>
           <p>
             제품 등록과 카테고리 관리는 로그인한 관리자만 사용할 수 있습니다.

@@ -14,16 +14,16 @@ import AdminLoginPage from "./pages/admin/AdminLoginPage";
 import AdminProductFormPage from "./pages/admin/AdminProductFormPage";
 import AdminProductsPage from "./pages/admin/AdminProductsPage";
 import ProtectedAdminRoute from "./components/admin/ProtectedAdminRoute";
-import brandLogo from "./assets/ecogad-logo-request.png";
+import brandLogo from "./assets/ecogod-logo-request.png";
 
 const Footer = () => (
   <footer className="site-footer">
     <div className="container footer-inner">
       <div className="footer-brand">
         <span className="footer-brand-logo-surface">
-          <img src={brandLogo} alt="ECOGAD 로고" className="footer-brand-logo" loading="lazy" />
+          <img src={brandLogo} alt="ECOGOD 로고" className="footer-brand-logo" loading="lazy" />
         </span>
-        <span className="footer-brand-name">ECOGAD Co.,Ltd.</span>
+        <span className="footer-brand-name">ECOGOD Co.,Ltd.</span>
       </div>
       <div className="footer-grid">
         <div>

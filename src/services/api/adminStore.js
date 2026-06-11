@@ -1,7 +1,7 @@
 import { adminCategorySeeds, adminProductSeeds } from "../../data/adminSeeds";
 
-const CATEGORY_STORAGE_KEY = "ecogad.admin.categories.v1";
-const PRODUCT_STORAGE_KEY = "ecogad.admin.products.v1";
+const CATEGORY_STORAGE_KEY = "ecogod.admin.categories.v1";
+const PRODUCT_STORAGE_KEY = "ecogod.admin.products.v1";
 
 function clone(value) {
   return JSON.parse(JSON.stringify(value));

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import brandLogo from "../assets/ecogad-logo-request.png";
+import brandLogo from "../assets/ecogod-logo-request.png";
 
 const navLinks = [
   { name: "회사소개", path: "/company" },
@@ -30,11 +30,11 @@ const Header = () => {
   return (
     <header className={`site-header ${scrolled ? "is-scrolled" : ""}`}>
       <div className="container header-inner">
-        <Link to="/" className="brand" aria-label="ECOGAD 홈으로 이동">
+        <Link to="/" className="brand" aria-label="ECOGOD 홈으로 이동">
           <span className="brand-logo-surface">
-            <img src={brandLogo} alt="ECOGAD 로고" className="brand-logo" />
+            <img src={brandLogo} alt="ECOGOD 로고" className="brand-logo" />
           </span>
-          <span className="sr-only">ECOGAD</span>
+          <span className="sr-only">ECOGOD</span>
         </Link>
 
         <button

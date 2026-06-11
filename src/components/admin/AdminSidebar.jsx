@@ -9,7 +9,7 @@ export default function AdminSidebar() {
   return (
     <aside className="admin-sidebar">
       <div className="admin-sidebar-brand">
-        <span className="admin-sidebar-eyebrow">ECOGAD ADMIN</span>
+        <span className="admin-sidebar-eyebrow">ECOGOD ADMIN</span>
         <strong>제품관리 시스템</strong>
         <p>큰 글씨와 단순한 흐름으로 제품 정보를 관리합니다.</p>
       </div>

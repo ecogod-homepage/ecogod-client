@@ -25,7 +25,7 @@ export default function AppLayout() {
       "@context": "https://schema.org",
       "@type": "Organization",
       name: "ECO GOD Co.,Ltd.",
-      url: "https://ecogadfront.vercel.app",
+      url: "https://ecogodfront.vercel.app",
       description: "산업용 필터 설계·제조 전문 기업"
     });
     document.head.appendChild(script);

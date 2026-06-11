@@ -1,5 +1,5 @@
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:8080";
-const ACCESS_TOKEN_KEY = "ecogad.admin.access-token";
+const ACCESS_TOKEN_KEY = "ecogod.admin.access-token";
 
 export { ACCESS_TOKEN_KEY };
 
