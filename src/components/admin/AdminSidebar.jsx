@@ -3,6 +3,7 @@ import { NavLink } from "react-router-dom";
 const navigationItems = [
   { to: "/admin/products", label: "제품 관리", description: "제품 등록과 수정" },
   { to: "/admin/categories", label: "카테고리 관리", description: "제품 분류와 노출 순서" }
+  ,{ to: "/admin/notices", label: "공지 관리", description: "공지 등록과 공개 관리" }
 ];
 
 export default function AdminSidebar() {

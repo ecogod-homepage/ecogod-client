@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import PageHero from "../components/common/PageHero";
 import SectionHeader from "../components/common/SectionHeader";
+import { submitInquiry } from "../services/api/inquiries";
 
 const InquiryPage = () => {
   const [formData, setFormData] = useState({
@@ -11,6 +12,8 @@ const InquiryPage = () => {
     message: "",
     agree: false
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [statusMessage, setStatusMessage] = useState("");
 
   const handleChange = (event) => {
     const { name, value, type, checked } = event.target;
@@ -20,7 +23,7 @@ const InquiryPage = () => {
     }));
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
     if (!formData.agree) {
@@ -28,9 +31,24 @@ const InquiryPage = () => {
       return;
     }
 
-    // 추후 서버 API 연결 예정
-    console.log("Sending inquiry:", formData);
-    alert("문의가 접수되었습니다. 담당자가 확인 후 연락드리겠습니다.");
+    try {
+      setIsSubmitting(true);
+      setStatusMessage("");
+      await submitInquiry({
+        name: formData.name,
+        companyName: formData.company,
+        phone: formData.phone,
+        email: formData.email,
+        message: formData.message,
+        privacyAgreed: formData.agree
+      });
+      setStatusMessage("문의가 접수되었습니다. 담당자가 확인 후 연락드리겠습니다.");
+      setFormData({ name: "", company: "", phone: "", email: "", message: "", agree: false });
+    } catch (error) {
+      setStatusMessage(error.message ?? "문의 접수에 실패했습니다.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -50,26 +68,27 @@ const InquiryPage = () => {
         />
 
         <div className="inquiry-form-wrap">
+          {statusMessage ? <div className="admin-banner">{statusMessage}</div> : null}
           <form className="inquiry-form" onSubmit={handleSubmit}>
             <div className="inquiry-row">
               <div className="form-field">
                 <label htmlFor="name">이름 *</label>
-                <input id="name" type="text" name="name" required className="form-input" onChange={handleChange} />
+                <input id="name" type="text" name="name" required className="form-input" value={formData.name} onChange={handleChange} />
               </div>
               <div className="form-field">
                 <label htmlFor="company">회사명</label>
-                <input id="company" type="text" name="company" className="form-input" onChange={handleChange} />
+                <input id="company" type="text" name="company" required className="form-input" value={formData.company} onChange={handleChange} />
               </div>
             </div>
 
             <div className="inquiry-row">
               <div className="form-field">
                 <label htmlFor="phone">연락처 *</label>
-                <input id="phone" type="tel" name="phone" required className="form-input" onChange={handleChange} />
+                <input id="phone" type="tel" name="phone" required className="form-input" value={formData.phone} onChange={handleChange} />
               </div>
               <div className="form-field">
                 <label htmlFor="email">이메일 *</label>
-                <input id="email" type="email" name="email" required className="form-input" onChange={handleChange} />
+                <input id="email" type="email" name="email" required className="form-input" value={formData.email} onChange={handleChange} />
               </div>
             </div>
 
@@ -81,6 +100,7 @@ const InquiryPage = () => {
                 required
                 rows="6"
                 className="form-input form-textarea"
+                value={formData.message}
                 onChange={handleChange}
               />
             </div>
@@ -96,8 +116,8 @@ const InquiryPage = () => {
               <label htmlFor="agree">[필수] 개인정보 수집 및 이용에 동의합니다.</label>
             </div>
 
-            <button type="submit" className="btn btn-primary inquiry-submit">
-              문의 접수하기
+            <button type="submit" className="btn btn-primary inquiry-submit" disabled={isSubmitting}>
+              {isSubmitting ? "접수 중..." : "문의 접수하기"}
             </button>
           </form>
         </div>

@@ -84,7 +84,7 @@ const ProductCategoryPage = () => {
         {products.length > 0 ? (
           <div className="card-grid product-card-grid">
             {products.map((product) => (
-              <article key={product.id} className="product-category-card">
+              <Link to={`/products/${categorySlug}/${product.id}`} key={product.id} className="product-category-card">
                 <div className="product-category-card-body product-item-card-body">
                   <div>
                     <h3 className="heading-3 product-category-title">{product.name}</h3>
@@ -95,7 +95,7 @@ const ProductCategoryPage = () => {
                     {product.description || "상세 설명은 관리자 페이지에서 등록할 수 있습니다."}
                   </p>
                 </div>
-              </article>
+              </Link>
             ))}
           </div>
         ) : (

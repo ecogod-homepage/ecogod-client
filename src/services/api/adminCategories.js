@@ -1,37 +1,24 @@
-import {
-  createAdminCategory,
-  deleteAdminCategory,
-  getAdminCategoryById,
-  listAdminCategories,
-  listPublicCategories,
-  updateAdminCategory
-} from "./adminStore";
-
-function delay(ms = 160) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
+import { request } from "./http";
 
 export async function fetchAdminCategories() {
-  await delay();
-  return listAdminCategories();
+  return request("/api/v1/admin/categories", { auth: true });
 }
 
 export async function fetchAdminCategoryById(categoryId) {
-  await delay();
-  return getAdminCategoryById(categoryId);
+  const items = await fetchAdminCategories();
+  return items.find((item) => String(item.id) === String(categoryId)) ?? null;
 }
 
 export async function saveAdminCategory(payload, categoryId) {
-  await delay();
-  return categoryId ? updateAdminCategory(categoryId, payload) : createAdminCategory(payload);
+  return request(categoryId ? `/api/v1/admin/categories/${categoryId}` : "/api/v1/admin/categories", {
+    method: categoryId ? "PATCH" : "POST", auth: true, body: payload
+  });
 }
 
 export async function removeAdminCategory(categoryId) {
-  await delay();
-  return deleteAdminCategory(categoryId);
+  return request(`/api/v1/admin/categories/${categoryId}`, { method: "DELETE", auth: true });
 }
 
 export async function fetchActiveCategoryOptions() {
-  await delay(80);
-  return listPublicCategories();
+  return request("/api/v1/product-categories");
 }

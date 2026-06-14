@@ -1,31 +1,19 @@
-import {
-  createAdminProduct,
-  deleteAdminProduct,
-  getAdminProductById,
-  listAdminProducts,
-  updateAdminProduct
-} from "./adminStore";
-
-function delay(ms = 180) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
+import { request } from "./http";
 
 export async function fetchAdminProducts() {
-  await delay();
-  return listAdminProducts();
+  return request("/api/v1/admin/products", { auth: true });
 }
 
 export async function fetchAdminProductById(productId) {
-  await delay();
-  return getAdminProductById(productId);
+  return request(`/api/v1/admin/products/${productId}`, { auth: true });
 }
 
 export async function saveAdminProduct(payload, productId) {
-  await delay();
-  return productId ? updateAdminProduct(productId, payload) : createAdminProduct(payload);
+  return request(productId ? `/api/v1/admin/products/${productId}` : "/api/v1/admin/products", {
+    method: productId ? "PATCH" : "POST", auth: true, body: payload
+  });
 }
 
 export async function removeAdminProduct(productId) {
-  await delay();
-  return deleteAdminProduct(productId);
+  return request(`/api/v1/admin/products/${productId}`, { method: "DELETE", auth: true });
 }

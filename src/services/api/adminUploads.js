@@ -1,4 +1,4 @@
-import { requestMultipart } from "./http";
+import { request, requestMultipart } from "./http";
 
 export async function uploadProductImage(file) {
   const formData = new FormData();
@@ -8,5 +8,11 @@ export async function uploadProductImage(file) {
     method: "POST",
     auth: true,
     formData
+  });
+}
+
+export function deleteProductImage(key) {
+  return request("/api/v1/admin/uploads/products/images", {
+    method: "DELETE", auth: true, body: { key }
   });
 }

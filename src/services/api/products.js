@@ -1,24 +1,18 @@
-import {
-  getPublicCategoryBySlug,
-  listPublicCategories,
-  listPublicProductsByCategorySlug
-} from "./adminStore";
-
-function delay(ms = 180) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
+import { request } from "./http";
 
 export async function fetchPublicCategories() {
-  await delay();
-  return listPublicCategories();
+  return request("/api/v1/product-categories");
 }
 
 export async function fetchCategoryBySlug(categorySlug) {
-  await delay(90);
-  return getPublicCategoryBySlug(categorySlug);
+  const categories = await fetchPublicCategories();
+  return categories.find((item) => item.slug === categorySlug) ?? null;
 }
 
 export async function fetchProductsByCategory(categorySlug) {
-  await delay();
-  return listPublicProductsByCategorySlug(categorySlug);
+  return request(`/api/v1/products?category=${encodeURIComponent(categorySlug)}`);
+}
+
+export function fetchProductById(productId) {
+  return request(`/api/v1/products/${productId}`);
 }

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import ConfirmDialog from "../../components/admin/ConfirmDialog";
+import ProductImageManager from "../../components/admin/ProductImageManager";
 import { fetchAdminCategories } from "../../services/api/adminCategories";
 import {
   fetchAdminProductById,
@@ -14,6 +15,7 @@ const EMPTY_FORM = {
   summary: "",
   description: "",
   thumbnailUrl: "",
+  detailImages: [],
   published: false
 };
 
@@ -110,6 +112,7 @@ export default function AdminProductFormPage() {
               summary: product.summary,
               description: product.description,
               thumbnailUrl: product.thumbnailUrl,
+              detailImages: product.detailImages || [],
               published: product.published
             });
             setCreatedAt(product.createdAt);
@@ -330,6 +333,13 @@ export default function AdminProductFormPage() {
             </fieldset>
           </div>
         </section>
+
+        <ProductImageManager
+          thumbnailUrl={formValues.thumbnailUrl}
+          onThumbnailChange={(thumbnailUrl) => setFormValues((prev) => ({ ...prev, thumbnailUrl }))}
+          detailImages={formValues.detailImages}
+          onDetailImagesChange={(detailImages) => setFormValues((prev) => ({ ...prev, detailImages }))}
+        />
 
         <aside className="admin-panel admin-form-aside">
           <h3 className="heading-3">입력 안내</h3>

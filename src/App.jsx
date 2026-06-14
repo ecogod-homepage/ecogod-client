@@ -13,6 +13,9 @@ import AdminCategoriesPage from "./pages/admin/AdminCategoriesPage";
 import AdminLoginPage from "./pages/admin/AdminLoginPage";
 import AdminProductFormPage from "./pages/admin/AdminProductFormPage";
 import AdminProductsPage from "./pages/admin/AdminProductsPage";
+import AdminNoticesPage from "./pages/admin/AdminNoticesPage";
+import AdminNoticeFormPage from "./pages/admin/AdminNoticeFormPage";
+import ProductDetailPage from "./pages/ProductDetailPage";
 import ProtectedAdminRoute from "./components/admin/ProtectedAdminRoute";
 import brandLogo from "./assets/ecogad-logo-request.png";
 
@@ -66,11 +69,15 @@ export default function App() {
             <Route path="products/new" element={<AdminProductFormPage />} />
             <Route path="products/:productId/edit" element={<AdminProductFormPage />} />
             <Route path="categories" element={<AdminCategoriesPage />} />
+            <Route path="notices" element={<AdminNoticesPage />} />
+            <Route path="notices/new" element={<AdminNoticeFormPage />} />
+            <Route path="notices/:noticeId/edit" element={<AdminNoticeFormPage />} />
           </Route>
           <Route path="/" element={<HomePage />} />
           <Route path="/company" element={<CompanyPage />} />
           <Route path="/products" element={<ProductsPage />} />
           <Route path="/products/:categorySlug" element={<ProductCategoryPage />} />
+          <Route path="/products/:categorySlug/:productId" element={<ProductDetailPage />} />
           <Route path="/inquiry" element={<InquiryPage />} />
           <Route path="/notices" element={<NoticeListPage />} />
           <Route path="/notices/:noticeId" element={<NoticeDetailPage />} />
