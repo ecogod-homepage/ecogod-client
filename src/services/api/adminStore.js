@@ -267,6 +267,8 @@ export function createAdminProduct(payload) {
     summary: String(payload.summary ?? "").trim(),
     description: String(payload.description ?? "").trim(),
     thumbnailUrl: String(payload.thumbnailUrl ?? "").trim(),
+    galleryImages: payload.galleryImages ?? [],
+    detailImages: payload.detailImages ?? [],
     published: Boolean(payload.published),
     createdAt: timestamp,
     updatedAt: timestamp
@@ -309,6 +311,8 @@ export function updateAdminProduct(productId, payload) {
     summary: String(payload.summary ?? "").trim(),
     description: String(payload.description ?? "").trim(),
     thumbnailUrl: String(payload.thumbnailUrl ?? "").trim(),
+    galleryImages: payload.galleryImages ?? [],
+    detailImages: payload.detailImages ?? [],
     published: Boolean(payload.published),
     updatedAt: nowIso()
   };

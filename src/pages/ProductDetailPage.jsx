@@ -6,13 +6,27 @@ export default function ProductDetailPage() {
   const { categorySlug, productId } = useParams();
   const [product, setProduct] = useState(null);
   const [error, setError] = useState("");
+  const [selectedImageKey, setSelectedImageKey] = useState("");
 
   useEffect(() => {
-    fetchProductById(productId).then(setProduct).catch((requestError) => setError(requestError.message));
+    fetchProductById(productId).then((item) => {
+      setProduct(item);
+      const images = item.galleryImages?.length
+        ? item.galleryImages
+        : item.thumbnailUrl ? [{ key: "legacy-thumbnail", url: item.thumbnailUrl, primary: true }] : [];
+      setSelectedImageKey((images.find((image) => image.primary) || images[0])?.key || "");
+    }).catch((requestError) => setError(requestError.message));
   }, [productId]);
 
   if (error) return <div className="container section"><h2>{error}</h2><Link to={`/products/${categorySlug}`}>목록으로</Link></div>;
   if (!product) return <div className="container section">제품 정보를 불러오는 중입니다.</div>;
+
+  const galleryImages = product.galleryImages?.length
+    ? product.galleryImages
+    : product.thumbnailUrl ? [{ key: "legacy-thumbnail", url: product.thumbnailUrl, altText: product.name, primary: true }] : [];
+  const selectedImage = galleryImages.find((image) => image.key === selectedImageKey)
+    || galleryImages.find((image) => image.primary)
+    || galleryImages[0];
 
   return (
     <article className="product-detail-page">
@@ -25,12 +39,29 @@ export default function ProductDetailPage() {
           </nav>
 
           <div className="product-detail-header">
-            <div className="product-detail-visual">
-              {product.thumbnailUrl ? (
-                <img src={product.thumbnailUrl} alt={`${product.name} 대표 이미지`} />
-              ) : (
-                <div className="product-detail-image-empty">ECO GOD PRODUCT</div>
-              )}
+            <div className="product-gallery">
+              {galleryImages.length > 1 ? (
+                <div className="product-gallery-thumbnails" aria-label="제품 이미지 선택">
+                  {galleryImages.map((image, index) => (
+                    <button
+                      type="button"
+                      key={image.key}
+                      className={`product-gallery-thumbnail ${image.key === selectedImage?.key ? "is-active" : ""}`}
+                      onClick={() => setSelectedImageKey(image.key)}
+                      aria-label={`${product.name} 이미지 ${index + 1} 보기`}
+                    >
+                      <img src={image.url} alt="" />
+                    </button>
+                  ))}
+                </div>
+              ) : null}
+              <div className="product-detail-visual">
+                {selectedImage ? (
+                  <img src={selectedImage.url} alt={selectedImage.altText || `${product.name} 제품 이미지`} />
+                ) : (
+                  <div className="product-detail-image-empty">ECO GOD PRODUCT</div>
+                )}
+              </div>
             </div>
 
             <div className="product-detail-intro">

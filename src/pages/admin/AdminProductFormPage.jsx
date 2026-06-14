@@ -15,6 +15,7 @@ const EMPTY_FORM = {
   summary: "",
   description: "",
   thumbnailUrl: "",
+  galleryImages: [],
   detailImages: [],
   published: false
 };
@@ -111,7 +112,8 @@ export default function AdminProductFormPage() {
               name: product.name,
               summary: product.summary,
               description: product.description,
-              thumbnailUrl: product.thumbnailUrl,
+              thumbnailUrl: product.thumbnailUrl || "",
+              galleryImages: product.galleryImages || [],
               detailImages: product.detailImages || [],
               published: product.published
             });
@@ -151,7 +153,12 @@ export default function AdminProductFormPage() {
   }
 
   async function persistProduct(nextPublished) {
-    const nextValues = { ...formValues, published: nextPublished };
+    const primaryImage = formValues.galleryImages.find((image) => image.primary) || formValues.galleryImages[0];
+    const nextValues = {
+      ...formValues,
+      thumbnailUrl: primaryImage?.url || formValues.thumbnailUrl,
+      published: nextPublished
+    };
     const validationErrors = validateForm(nextValues);
 
     setFieldErrors(validationErrors);
@@ -297,21 +304,6 @@ export default function AdminProductFormPage() {
               />
             </label>
 
-            <label className="admin-control">
-              <span className="admin-control-label">썸네일 이미지 주소</span>
-              <input
-                type="text"
-                name="thumbnailUrl"
-                className="admin-input"
-                value={formValues.thumbnailUrl}
-                onChange={handleFieldChange}
-                placeholder="https:// 형식의 이미지 주소"
-              />
-              {fieldErrors.thumbnailUrl ? (
-                <span className="admin-field-error">{fieldErrors.thumbnailUrl}</span>
-              ) : null}
-            </label>
-
             <fieldset className="admin-control admin-visibility-group">
               <legend className="admin-control-label">공개 상태</legend>
               <div className="admin-segmented">
@@ -335,8 +327,8 @@ export default function AdminProductFormPage() {
         </section>
 
         <ProductImageManager
-          thumbnailUrl={formValues.thumbnailUrl}
-          onThumbnailChange={(thumbnailUrl) => setFormValues((prev) => ({ ...prev, thumbnailUrl }))}
+          galleryImages={formValues.galleryImages}
+          onGalleryImagesChange={(galleryImages) => setFormValues((prev) => ({ ...prev, galleryImages }))}
           detailImages={formValues.detailImages}
           onDetailImagesChange={(detailImages) => setFormValues((prev) => ({ ...prev, detailImages }))}
         />

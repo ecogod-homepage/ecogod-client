@@ -85,6 +85,11 @@ const ProductCategoryPage = () => {
           <div className="card-grid product-card-grid">
             {products.map((product) => (
               <Link to={`/products/${categorySlug}/${product.id}`} key={product.id} className="product-category-card">
+                {product.thumbnailUrl ? (
+                  <div className="product-category-card-image">
+                    <img src={product.thumbnailUrl} alt={`${product.name} 대표 이미지`} loading="lazy" />
+                  </div>
+                ) : null}
                 <div className="product-category-card-body product-item-card-body">
                   <div>
                     <h3 className="heading-3 product-category-title">{product.name}</h3>
