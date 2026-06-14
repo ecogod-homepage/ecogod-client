@@ -16,21 +16,71 @@ export default function ProductDetailPage() {
 
   return (
     <article className="product-detail-page">
-      <header className="product-detail-header container">
-        {product.thumbnailUrl ? <img src={product.thumbnailUrl} alt={`${product.name} 대표 이미지`} /> : null}
-        <div>
-          <span className="section-eyebrow">{product.categoryName}</span>
-          <h1 className="heading-1">{product.name}</h1>
-          <p className="body-text">{product.summary}</p>
-          <Link to="/inquiry" className="btn btn-primary">제품 문의하기</Link>
+      <section className="product-detail-hero">
+        <div className="container">
+          <nav className="product-detail-breadcrumb" aria-label="현재 위치">
+            <Link to="/products">PRODUCTS</Link>
+            <span aria-hidden="true">/</span>
+            <Link to={`/products/${categorySlug}`}>{product.categoryName}</Link>
+          </nav>
+
+          <div className="product-detail-header">
+            <div className="product-detail-visual">
+              {product.thumbnailUrl ? (
+                <img src={product.thumbnailUrl} alt={`${product.name} 대표 이미지`} />
+              ) : (
+                <div className="product-detail-image-empty">ECO GOD PRODUCT</div>
+              )}
+            </div>
+
+            <div className="product-detail-intro">
+              <span className="section-eyebrow product-detail-eyebrow">{product.categoryName}</span>
+              <h1>{product.name}</h1>
+              <p className="product-detail-summary">
+                {product.summary || "산업 현장의 요구 조건에 맞춘 에코가드의 전문 필터 솔루션입니다."}
+              </p>
+
+              <div className="product-detail-divider" />
+              <p className="product-detail-intro-copy">
+                제품 사양과 적용 환경에 대한 자세한 상담이 필요하신가요?
+                에코가드의 기술 지원 팀이 현장에 적합한 솔루션을 제안해 드립니다.
+              </p>
+              <div className="product-detail-actions">
+                <Link to="/inquiry" className="btn btn-primary">제품 견적 문의</Link>
+                <Link to={`/products/${categorySlug}`} className="text-link">제품 목록으로</Link>
+              </div>
+            </div>
+          </div>
         </div>
-      </header>
-      <section className="product-detail-content container">
-        {product.description ? <div className="product-detail-text">{product.description}</div> : null}
-        <div className="product-detail-images">
-          {(product.detailImages || []).map((image) => (
-            <img key={image.key} src={image.url} alt={image.altText || product.name} loading="lazy" />
-          ))}
+      </section>
+
+      <section className="section product-detail-description-section">
+        <div className="container product-detail-content">
+          <header className="section-header product-detail-section-header">
+            <p className="section-eyebrow">PRODUCT DETAILS</p>
+            <h2>제품 상세 정보</h2>
+            <p className="section-description">
+              제품의 주요 특징과 적용 정보를 확인하세요.
+            </p>
+          </header>
+
+          {product.description ? <div className="product-detail-text">{product.description}</div> : null}
+          <div className="product-detail-images">
+            {(product.detailImages || []).map((image) => (
+              <figure key={image.key} className="product-detail-image-frame">
+                <img src={image.url} alt={image.altText || product.name} loading="lazy" />
+              </figure>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="section product-detail-cta">
+        <div className="container product-detail-cta-inner">
+          <span className="section-eyebrow">TECHNICAL CONSULTING</span>
+          <h2>현장에 맞는 필터 솔루션을 제안해 드립니다.</h2>
+          <p>제품 선정부터 맞춤 제작, 교체 주기까지 에코가드 기술팀과 상담하세요.</p>
+          <Link to="/inquiry" className="btn btn-primary">지금 견적 문의하기</Link>
         </div>
       </section>
     </article>
